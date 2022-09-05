@@ -20,7 +20,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Autocomplete v-model="selectedItem" :suggestions="wasteItems" :dropdown="true" @complete="searchItems">
+    <Autocomplete v-model="selectedItem" :suggestions="wasteItems" :dropdown="true" @complete="searchItems" optionLabel="name">
         <template #item="slotProps">
             <div class="ml-2">hi {{slotProps.item.name}}</div>
         </template>
