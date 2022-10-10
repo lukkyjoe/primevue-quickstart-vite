@@ -2,6 +2,7 @@ import axios from "axios";
 import * as dotenv from "dotenv";
 dotenv.config();
 import { MongoClient, ObjectId } from "mongodb";
+import throttledQueue from "throttled-queue";
 
 // Connection URL
 console.log(process.env.MONGO_URL);
@@ -11,6 +12,7 @@ const client = new MongoClient(url);
 
 // Database Name
 const dbName = "materially-api";
+const throttle = throttledQueue(5, 1000);
 
 interface Thing {
   id?: ObjectId;
@@ -30,12 +32,14 @@ async function main() {
 
   // for each item: call api
   return Promise.allSettled(
-    things.map((thing) => {
-      const { name } = thing;
-      return axios.post("https://kzozb8le.directus.app/items/waste_items", {
-        name
-      });
-    })
+    things.map((thing) =>
+      throttle(() => {
+        const { name } = thing;
+        return axios.post("https://kzozb8le.directus.app/items/waste_items", {
+          name
+        });
+      })
+    )
   );
 }
 
