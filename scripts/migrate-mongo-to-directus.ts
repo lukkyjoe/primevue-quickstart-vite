@@ -31,14 +31,17 @@ async function main() {
   // for each item: call api
   return Promise.allSettled(
     things.map((thing) => {
-      axios.post();
+      const { name } = thing;
+      return axios.post("https://kzozb8le.directus.app/items/waste_items", {
+        name
+      });
     })
   );
 }
 
 async function run() {
   try {
-    await main();
+    console.log(await main());
   } catch (e) {
     console.error(e);
   } finally {
