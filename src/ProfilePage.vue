@@ -40,11 +40,17 @@ const searchItems = (event) => {
 </script>
 
 <template>
-    <Autocomplete v-model="selectedItem" :suggestions="filteredWasteItems" :dropdown="true"
-        @complete="searchItems" optionLabel="name" forceSelection>
-        <template #item="{item}">
-            <div class="ml-2">{{item.name}}</div>
-        </template>
-    </Autocomplete>
+    <div class="grid">
+        <div class="col-12 p-fluid">
+            <Autocomplete v-model="selectedItem" :suggestions="filteredWasteItems" :dropdown="true"
+                @complete="searchItems" optionLabel="name" forceSelection>
+                <template #item="{item}">
+                    <div class="ml-2">{{item.name}}</div>
+                </template>
+            </Autocomplete>
+        </div>
+
+    </div>
+
     <!-- <Editor v-model="value1"/> -->
 </template>
