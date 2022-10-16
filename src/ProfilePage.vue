@@ -9,12 +9,8 @@ const selectedItem = ref()
 
 onMounted(() => {
     fetch('https://kzozb8le.directus.app/items/waste_items')
-        .then(res => {
-            console.log('res', res)
-            return res.json()
-        })
+        .then(res => res.json())
         .then(d => {
-            console.log('d', d)
             wasteItems.value = d.data
         })
 })
@@ -40,8 +36,8 @@ const searchItems = (event) => {
 </script>
 
 <template>
-    <div class="grid">
-        <div class="col-12 p-fluid">
+    <div class="grid justify-content-center">
+        <div class="col-12 md:col-6 lg:col-4 p-fluid">
             <Autocomplete v-model="selectedItem" :suggestions="filteredWasteItems" :dropdown="true"
                 @complete="searchItems" optionLabel="name" forceSelection>
                 <template #item="{item}">
