@@ -35,7 +35,8 @@ const searchItems = (event) => {
 
 <template>
     <div class="grid justify-content-center">
-        <h2 class="col-12">Your local guide to waste, recycling, and composting</h2>
+        <h2 class="col-12">Your guide to waste, recycling, and composting in Seattle</h2>
+        <h3>Where should it go?</h3>
         <div class="col-12 md:col-6 lg:col-4 p-fluid">
             <Autocomplete v-model="selectedItem" :suggestions="filteredWasteItems" :dropdown="true"
                 @complete="searchItems" optionLabel="name" forceSelection>
