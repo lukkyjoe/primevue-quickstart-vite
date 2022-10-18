@@ -8,11 +8,9 @@ const value1 = ref('<div>Welcome to PrimeVue <b>Editor</b></div><div><br></div>'
 const selectedItem = ref()
 
 onMounted(() => {
-    fetch('https://kzozb8le.directus.app/items/waste_items')
+    fetch('https://kzozb8le.directus.app/items/waste_items?limit=-1')
         .then(res => res.json())
-        .then(d => {
-            wasteItems.value = d.data
-        })
+        .then(d => wasteItems.value = d.data)
 })
 
 const searchItems = (event) => {
