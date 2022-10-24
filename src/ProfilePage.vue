@@ -1,5 +1,6 @@
 <script setup>
 import Autocomplete from 'primevue/autocomplete'
+import Card from 'primevue/card';
 import Editor from 'primevue/editor';
 import { ref, onMounted } from 'vue'
 const wasteItems = ref([{ name: 'foo' }])
@@ -44,6 +45,17 @@ const searchItems = (event) => {
                     <div class="ml-2">{{item.name}}</div>
                 </template>
             </Autocomplete>
+            <Card>
+                <template #title>
+                    Simple Card
+                </template>
+                <template #content>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error
+                        repudiandae numquam deserunt
+                        quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse,
+                        cupiditate neque quas!</p>
+                </template>
+            </Card>
         </div>
 
     </div>
