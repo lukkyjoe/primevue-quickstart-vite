@@ -8,10 +8,10 @@ import throttledQueue from "throttled-queue";
 console.log(process.env.MONGO_URL);
 // https://stackoverflow.com/a/52892398/3175120
 const url: string = process.env.MONGO_URL as string;
-const client = new MongoClient(url);
+const dbClient = new MongoClient(url);
 
 // Database Name
-const dbName = "materially-api";
+const dbName = "materially-api"; //TODO: should be my-waste
 const throttle = throttledQueue(5, 1000);
 
 interface Thing {
@@ -20,15 +20,19 @@ interface Thing {
   admin: boolean;
 }
 
-async function main() {
+async function migrate(client: MongoClient) {
   // Use connect method to connect to the server
   await client.connect();
   console.log("Connected successfully to server");
   const db = client.db(dbName);
   const collection = db.collection<Thing>("things"); //https://github.com/mongodb-developer/mongodb-typescript-example/blob/finish/src/services/database.service.ts#L24
+  // get "my-waste.items"
+  // also get "my-waste.instructions"
 
   // the following code examples can be pasted here...
   const things = await collection.find({}).toArray();
+  // figure out how to upload an item that 'relates' to an instruction
+
 
   // for each item: call api
   return Promise.allSettled(
@@ -45,11 +49,11 @@ async function main() {
 
 async function run() {
   try {
-    console.log(await main());
+    console.log(await migrate(dbClient));
   } catch (e) {
     console.error(e);
   } finally {
-    client.close();
+    dbClient.close();
   }
 }
 
