@@ -1,0 +1,5 @@
+query MyQuery {
+  waste_items {
+    name
+  }
+}
