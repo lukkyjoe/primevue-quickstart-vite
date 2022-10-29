@@ -3,6 +3,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import { MongoClient, ObjectId } from "mongodb";
 import throttledQueue from "throttled-queue";
+import gql from 'graphql-tag'
+import { print } from 'graphql'
+// import { MyQuery } from './foo.gql'
 
 // Connection URL
 console.log(process.env.MONGO_URL);
@@ -13,6 +16,13 @@ const dbClient = new MongoClient(url);
 // Database Name
 const dbName = "materially-api"; //TODO: should be my-waste
 const throttle = throttledQueue(5, 1000);
+const GET_WASTE_ITEMS = gql`
+query {
+  waste_items {
+    name
+  }
+}
+`
 
 interface Thing {
   id?: ObjectId;
@@ -49,7 +59,9 @@ async function migrate(client: MongoClient) {
 
 async function run() {
   try {
-    console.log(await migrate(dbClient));
+    const gqlResult = await axios.post('https://kzozb8le.directus.app/graphql', {query: print(GET_WASTE_ITEMS)})
+    console.log(gqlResult)
+    // console.log(await migrate(dbClient));
   } catch (e) {
     console.error(e);
   } finally {
