@@ -14,7 +14,7 @@ const url: string = process.env.MONGO_URL as string;
 const dbClient = new MongoClient(url);
 
 // Database Name
-const dbName = "materially-api"; //TODO: should be my-waste
+const dbName = "my-waste"; //TODO: should be my-waste
 const throttle = throttledQueue(5, 1000);
 const GET_WASTE_ITEMS = gql`
 query {
@@ -25,9 +25,8 @@ query {
 `
 
 interface Thing {
-  id?: ObjectId;
+  _id?: ObjectId;
   name: string;
-  admin: boolean;
 }
 
 async function migrate(client: MongoClient) {
@@ -35,18 +34,18 @@ async function migrate(client: MongoClient) {
   await client.connect();
   console.log("Connected successfully to server");
   const db = client.db(dbName);
-  const collection = db.collection<Thing>("things"); //https://github.com/mongodb-developer/mongodb-typescript-example/blob/finish/src/services/database.service.ts#L24
+  const collection = db.collection<Thing>("items"); //https://github.com/mongodb-developer/mongodb-typescript-example/blob/finish/src/services/database.service.ts#L24
   // get "my-waste.items"
   // also get "my-waste.instructions"
 
   // the following code examples can be pasted here...
-  const things = await collection.find({}).toArray();
+  const items = await collection.find({}).toArray();
   // figure out how to upload an item that 'relates' to an instruction
 
 
   // for each item: call api
   return Promise.allSettled(
-    things.map((thing) =>
+    items.map((thing) =>
       throttle(() => {
         const { name } = thing;
         return axios.post("https://kzozb8le.directus.app/items/waste_items", {
