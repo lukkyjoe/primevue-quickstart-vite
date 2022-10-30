@@ -29,38 +29,58 @@ interface Thing {
   name: string;
 }
 
+interface Instruction {
+  _id: ObjectId;
+  item: ObjectId;
+  location: string;
+  instruction?: string;
+}
+
 async function migrate(client: MongoClient) {
   // Use connect method to connect to the server
   await client.connect();
   console.log("Connected successfully to server");
   const db = client.db(dbName);
-  const collection = db.collection<Thing>("items"); //https://github.com/mongodb-developer/mongodb-typescript-example/blob/finish/src/services/database.service.ts#L24
+  const itemsCollection = db.collection<Thing>("items"); //https://github.com/mongodb-developer/mongodb-typescript-example/blob/finish/src/services/database.service.ts#L24
+  const instructionsCollection = db.collection<Instruction>("instructions")
   // get "my-waste.items"
   // also get "my-waste.instructions"
 
   // the following code examples can be pasted here...
-  const items = await collection.find({}).toArray();
+  const items = await itemsCollection.find({}).toArray();
+  const instructions = await instructionsCollection.find({}).toArray();
   // figure out how to upload an item that 'relates' to an instruction
+  
+  const itemsWithInstructions = items.map((item) => {
+    const instruction = instructions.find((instruction) => instruction.item.equals(item._id) )
+    return { 
+      instruction,
+      ...item }
+    })
+  debugger
+    
+
+  // upload the thing up
 
 
   // for each item: call api
-  return Promise.allSettled(
-    items.map((thing) =>
-      throttle(() => {
-        const { name } = thing;
-        return axios.post("https://kzozb8le.directus.app/items/waste_items", {
-          name
-        });
-      })
-    )
-  );
+  // return Promise.allSettled(
+  //   items.map((thing) =>
+  //     throttle(() => {
+  //       const { name } = thing;
+  //       return axios.post("https://kzozb8le.directus.app/items/waste_items", {
+  //         name
+  //       });
+  //     })
+  //   )
+  // );
 }
 
 async function run() {
   try {
-    const gqlResult = await axios.post('https://kzozb8le.directus.app/graphql', {query: print(GET_WASTE_ITEMS)})
-    console.log(gqlResult)
-    // console.log(await migrate(dbClient));
+    // const gqlResult = await axios.post('https://kzozb8le.directus.app/graphql', {query: print(GET_WASTE_ITEMS)})
+    // console.log(gqlResult)
+    console.log(await migrate(dbClient));
   } catch (e) {
     console.error(e);
   } finally {
