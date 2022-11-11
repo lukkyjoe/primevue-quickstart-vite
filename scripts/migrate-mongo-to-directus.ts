@@ -24,6 +24,20 @@ query {
 }
 `
 
+const CREATE_UPLOAD_INSTRUCTIONS = gql`
+mutation MyMutation ($itemsWithInstructionsInput: [create_waste_items_input!]){
+  create_waste_items_items(
+    data: $itemsWithInstructionsInput
+  ) {
+    id
+    instructions {
+      id
+      content
+    }
+  }
+}
+`
+
 interface Thing {
   _id?: ObjectId;
   name: string;
@@ -48,18 +62,23 @@ async function migrate(client: MongoClient) {
 
   // the following code examples can be pasted here...
   const items = await itemsCollection.find({}).toArray();
-  const instructions = await instructionsCollection.find({}).toArray();
+  const instructionsArr = await instructionsCollection.find({}).toArray();
   // figure out how to upload an item that 'relates' to an instruction
-  
-  const itemsWithInstructions = items.map((item) => {
-    const instruction = instructions.find((instruction) => instruction.item.equals(item._id) )
-    return { 
-      instruction,
-      ...item }
-    })
-  debugger
-    
 
+  const itemsWithInstructions = items.map((item) => {
+    const { name } = item
+    const instructionObj = instructionsArr.find((instruction) => instruction.item.equals(item._id))
+    const instruction = instructionObj?.instruction
+    return {
+      instructions: {content: instruction},
+      name,
+      status: "published"
+    }
+  })
+
+  const confirmation = await uploadBatch(itemsWithInstructions)
+  debugger
+  // create_waste_items_items
   // upload the thing up
 
 
@@ -74,6 +93,13 @@ async function migrate(client: MongoClient) {
   //     })
   //   )
   // );
+}
+
+const uploadBatch = (itemInstructions: any) => {
+  return axios.post('https://kzozb8le.directus.app/graphql', { 
+    query: print(CREATE_UPLOAD_INSTRUCTIONS), 
+    variables: {itemsWithInstructionsInput: itemInstructions}
+  })
 }
 
 async function run() {

@@ -3,3 +3,42 @@ query MyQuery {
     name
   }
 }
+
+mutation MyMutation {
+  create_waste_items_items(
+    data: [
+      {
+        instructions: { content: "what about" }
+        name: "what"
+        status: "published"
+      }
+    ]
+  ) {
+    id
+    instructions {
+      id
+      content
+    }
+  }
+}
+
+mutation MyMutation ($itemsWithInstructionsInput: [create_waste_items_input!]){
+  create_waste_items_items(
+    data: $itemsWithInstructionsInput
+  ) {
+    id
+    instructions {
+      id
+      content
+    }
+  }
+}
+
+{"data":[
+      {
+        "instructions": [{ "content": "what about" }],
+        "name": "what",
+        "status": "published"
+      }
+    ]
+}
