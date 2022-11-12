@@ -4,7 +4,7 @@ query MyQuery {
   }
 }
 
-mutation MyMutation {
+mutation MyMutation2 {
   create_waste_items_items(
     data: [
       {

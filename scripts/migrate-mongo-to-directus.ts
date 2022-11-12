@@ -5,10 +5,9 @@ import { MongoClient, ObjectId } from "mongodb";
 import throttledQueue from "throttled-queue";
 import gql from 'graphql-tag'
 import { print } from 'graphql'
-// import { MyQuery } from './foo.gql'
+import { MyMutation } from './foo.graphql'
 
 // Connection URL
-console.log(process.env.MONGO_URL);
 // https://stackoverflow.com/a/52892398/3175120
 const url: string = process.env.MONGO_URL as string;
 const dbClient = new MongoClient(url);
@@ -16,13 +15,6 @@ const dbClient = new MongoClient(url);
 // Database Name
 const dbName = "my-waste"; //TODO: should be my-waste
 const throttle = throttledQueue(5, 1000);
-const GET_WASTE_ITEMS = gql`
-query {
-  waste_items {
-    name
-  }
-}
-`
 
 const CREATE_UPLOAD_INSTRUCTIONS = gql`
 mutation MyMutation ($itemsWithInstructionsInput: [create_waste_items_input!]){
