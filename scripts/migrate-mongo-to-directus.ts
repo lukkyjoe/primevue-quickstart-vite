@@ -5,7 +5,6 @@ import { MongoClient, ObjectId } from "mongodb";
 import throttledQueue from "throttled-queue";
 import gql from 'graphql-tag'
 import { print } from 'graphql'
-import { MyMutation } from './foo.graphql'
 
 // Connection URL
 // https://stackoverflow.com/a/52892398/3175120
@@ -13,7 +12,7 @@ const url: string = process.env.MONGO_URL as string;
 const dbClient = new MongoClient(url);
 
 // Database Name
-const dbName = "my-waste"; //TODO: should be my-waste
+const dbName = "my-waste";
 const throttle = throttledQueue(5, 1000);
 
 const CREATE_UPLOAD_INSTRUCTIONS = gql`
@@ -29,6 +28,8 @@ mutation MyMutation ($itemsWithInstructionsInput: [create_waste_items_input!]){
   }
 }
 `
+
+
 
 interface Thing {
   _id?: ObjectId;
@@ -49,13 +50,8 @@ async function migrate(client: MongoClient) {
   const db = client.db(dbName);
   const itemsCollection = db.collection<Thing>("items"); //https://github.com/mongodb-developer/mongodb-typescript-example/blob/finish/src/services/database.service.ts#L24
   const instructionsCollection = db.collection<Instruction>("instructions")
-  // get "my-waste.items"
-  // also get "my-waste.instructions"
-
-  // the following code examples can be pasted here...
   const items = await itemsCollection.find({}).toArray();
   const instructionsArr = await instructionsCollection.find({}).toArray();
-  // figure out how to upload an item that 'relates' to an instruction
 
   const itemsWithInstructions = items.map((item) => {
     const { name } = item
@@ -69,22 +65,6 @@ async function migrate(client: MongoClient) {
   })
 
   const confirmation = await uploadBatch(itemsWithInstructions)
-  debugger
-  // create_waste_items_items
-  // upload the thing up
-
-
-  // for each item: call api
-  // return Promise.allSettled(
-  //   items.map((thing) =>
-  //     throttle(() => {
-  //       const { name } = thing;
-  //       return axios.post("https://kzozb8le.directus.app/items/waste_items", {
-  //         name
-  //       });
-  //     })
-  //   )
-  // );
 }
 
 const uploadBatch = (itemInstructions: any) => {
@@ -96,8 +76,6 @@ const uploadBatch = (itemInstructions: any) => {
 
 async function run() {
   try {
-    // const gqlResult = await axios.post('https://kzozb8le.directus.app/graphql', {query: print(GET_WASTE_ITEMS)})
-    // console.log(gqlResult)
     console.log(await migrate(dbClient));
   } catch (e) {
     console.error(e);
