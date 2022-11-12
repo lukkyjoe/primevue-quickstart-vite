@@ -2,9 +2,9 @@ import axios from "axios";
 import * as dotenv from "dotenv";
 dotenv.config();
 import { MongoClient, ObjectId } from "mongodb";
-import throttledQueue from "throttled-queue";
 import gql from 'graphql-tag'
 import { print } from 'graphql'
+
 
 // Connection URL
 // https://stackoverflow.com/a/52892398/3175120
@@ -13,7 +13,6 @@ const dbClient = new MongoClient(url);
 
 // Database Name
 const dbName = "my-waste";
-const throttle = throttledQueue(5, 1000);
 
 const CREATE_UPLOAD_INSTRUCTIONS = gql`
 mutation MyMutation ($itemsWithInstructionsInput: [create_waste_items_input!]){
@@ -28,8 +27,6 @@ mutation MyMutation ($itemsWithInstructionsInput: [create_waste_items_input!]){
   }
 }
 `
-
-
 
 interface Thing {
   _id?: ObjectId;
@@ -52,7 +49,6 @@ async function migrate(client: MongoClient) {
   const instructionsCollection = db.collection<Instruction>("instructions")
   const items = await itemsCollection.find({}).toArray();
   const instructionsArr = await instructionsCollection.find({}).toArray();
-
   const itemsWithInstructions = items.map((item) => {
     const { name } = item
     const instructionObj = instructionsArr.find((instruction) => instruction.item.equals(item._id))
@@ -65,6 +61,7 @@ async function migrate(client: MongoClient) {
   })
 
   const confirmation = await uploadBatch(itemsWithInstructions)
+  console.log("uploadBatch complete")
 }
 
 const uploadBatch = (itemInstructions: any) => {
