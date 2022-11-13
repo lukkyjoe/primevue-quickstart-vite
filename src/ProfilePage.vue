@@ -1,17 +1,36 @@
-<script setup>
+<script lang="ts" setup>
 import Autocomplete from 'primevue/autocomplete'
 import Card from 'primevue/card';
 import Editor from 'primevue/editor';
 import { ref, onMounted } from 'vue'
-const wasteItems = ref([{ name: 'foo' }])
+import gql from 'graphql-tag'
+import { print } from 'graphql'
+import axios from 'axios'
+const wasteItems = ref([])
 const filteredWasteItems = ref([])
-const value1 = ref('<div>Welcome to PrimeVue <b>Editor</b></div><div><br></div>');
 const selectedItem = ref()
 
+const QUERY_WASTE_ITEMS = gql`
+    query MyQuery {
+    waste_items {
+        id
+        name
+        instructions {
+        content
+        locations_id
+        }
+    }
+    }
+`
+
 onMounted(() => {
-    fetch('https://kzozb8le.directus.app/items/waste_items?limit=-1')
-        .then(res => res.json())
-        .then(d => wasteItems.value = d.data)
+    axios.post('https://kzozb8le.directus.app/graphql?limit=-1', {
+        query: print(QUERY_WASTE_ITEMS)
+    })
+        .then(res => {
+            console.log('res', res)
+            wasteItems.value = res.data.data.waste_items
+        })
 })
 
 const searchItems = (event) => {
@@ -27,7 +46,6 @@ const searchItems = (event) => {
         }
     } catch (e) {
         console.error(e)
-        console.log(item)
         console.log(event.query)
     }
 
