@@ -12,14 +12,14 @@ const selectedItem = ref()
 
 const QUERY_WASTE_ITEMS = gql`
     query MyQuery {
-    waste_items(limit: -1) {
-        id
-        name
-        instructions {
-        content
-        locations_id
+        waste_items(limit: -1) {
+            id
+            name
+            instructions {
+            content
+            locations_id
+            }
         }
-    }
     }
 `
 
