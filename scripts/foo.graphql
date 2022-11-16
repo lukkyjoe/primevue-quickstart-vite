@@ -31,3 +31,15 @@ mutation MyMutation($itemsWithInstructionsInput: [create_waste_items_input!]) {
     }
   }
 }
+
+query QueryForLocationId4 {
+  waste_items(filter: { instructions: { locations_id: { _eq: "4" } } }) {
+    id
+    instructions {
+      content
+      id
+      locations_id
+    }
+    name
+  }
+}
