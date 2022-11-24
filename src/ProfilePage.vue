@@ -11,21 +11,27 @@ const filteredWasteItems = ref([])
 const selectedItem = ref()
 
 const QUERY_WASTE_ITEMS = gql`
-    query MyQuery {
-        waste_items(limit: -1) {
-            id
-            name
-            instructions {
-            content
-            locations_id
-            }
-        }
+query QueryForLocationId($_eq: GraphQLStringOrFloat = "") {
+  waste_items(filter: { instructions: { locations_id: { _eq: $_eq } } }, limit: -1) {
+    id
+    instructions {
+      content
+      id
+      locations_id
     }
+    name
+  }
+}
 `
+
+const SEATTLE_LOCATION_ID = 4
 
 onMounted(() => {
     axios.post('https://kzozb8le.directus.app/graphql?limit=-1', {
-        query: print(QUERY_WASTE_ITEMS)
+        query: print(QUERY_WASTE_ITEMS),
+        variables: {
+            _eq: SEATTLE_LOCATION_ID
+        }
     })
         .then(res => {
             console.log('res', res)
