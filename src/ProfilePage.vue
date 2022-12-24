@@ -75,6 +75,7 @@ const searchItems = (event) => {
                 </template>
                 <template #content>
                     <div v-html="selectedItem?.instructions[0].content"></div>
+                    <!-- https://vuejs.org/api/built-in-directives.html#v-html -->
                 </template>
             </Card>
         </div>
