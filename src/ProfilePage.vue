@@ -26,17 +26,14 @@ query QueryForLocationId($_eq: GraphQLStringOrFloat = "") {
 
 const SEATTLE_LOCATION_ID = 4
 
-onMounted(() => {
-    axios.post('https://kzozb8le.directus.app/graphql?limit=-1', {
+onMounted(async () => {
+    const { data: wasteItemsQueryResponse } = await axios.post('https://kzozb8le.directus.app/graphql?limit=-1', {
         query: print(QUERY_WASTE_ITEMS),
         variables: {
             _eq: SEATTLE_LOCATION_ID
         }
     })
-        .then(res => {
-            console.log('res', res)
-            wasteItems.value = res.data.data.waste_items
-        })
+    wasteItems.value = wasteItemsQueryResponse.data.waste_items
 })
 
 const searchItems = (event) => {
