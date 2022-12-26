@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import Autocomplete from 'primevue/autocomplete'
 import Card from 'primevue/card';
-import Editor from 'primevue/editor';
 import { ref, onMounted } from 'vue'
 import gql from 'graphql-tag'
 import { print } from 'graphql'
@@ -77,8 +76,6 @@ const searchItems = (event) => {
         </div>
 
     </div>
-
-    <!-- <Editor v-model="value1"/> -->
 </template>
 
 <style scoped>
