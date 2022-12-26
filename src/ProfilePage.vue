@@ -61,7 +61,7 @@ const searchItems = (event) => {
 <template>
     <div class="grid justify-content-center">
         <h2 class="col-12 text-center">Your guide to waste, recycling, and composting in Seattle</h2>
-        <div class="col-12 md:col-6 lg:col-4 p-fluid">
+        <div class="col-12 md:col-7 lg:col-5 p-fluid">
             <Autocomplete v-model="selectedItem" :suggestions="filteredWasteItems" :dropdown="true"
                 @complete="searchItems" optionLabel="name" forceSelection>
                 <template #item="{item}">
@@ -83,3 +83,12 @@ const searchItems = (event) => {
 
     <!-- <Editor v-model="value1"/> -->
 </template>
+
+<style scoped>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap');
+    h2 {
+        font-family: 'Oswald', sans-serif;
+        font-weight: 500;
+    }
+
+</style>
