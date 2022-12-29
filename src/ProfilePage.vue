@@ -19,6 +19,10 @@ query QueryForLocationId($_eq: GraphQLStringOrFloat = "") {
       locations_id
     }
     name
+    images {
+      id  
+      directus_files_id
+    }
   }
 }
 `
