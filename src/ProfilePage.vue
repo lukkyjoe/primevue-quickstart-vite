@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Autocomplete from 'primevue/autocomplete'
 import Card from 'primevue/card';
+import Image from 'primevue/image';
 import { ref, onMounted } from 'vue'
 import gql from 'graphql-tag'
 import { print } from 'graphql'
@@ -20,8 +21,10 @@ query QueryForLocationId($_eq: GraphQLStringOrFloat = "") {
     }
     name
     images {
-      id  
-      directus_files_id
+      id
+      directus_files_id {
+        id
+      }
     }
   }
 }
@@ -73,7 +76,8 @@ const searchItems = (event) => {
                     {{selectedItem?.name}}
                 </template>
                 <template #content>
-                    <div v-html="selectedItem?.instructions[0].content"></div>
+                    <Image v-if="selectedItem?.images[0]?.directus_files_id" :src="`https://kzozb8le.directus.app/assets/${selectedItem.images[0].directus_files_id.id}`" width="300"/>
+                    <div v-html="selectedItem?.instructions[0]?.content"></div>
                     <!-- https://vuejs.org/api/built-in-directives.html#v-html -->
                 </template>
             </Card>
